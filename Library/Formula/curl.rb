@@ -1,9 +1,9 @@
 class Curl < Formula
   desc "Get a file from an HTTP, HTTPS or FTP server"
   homepage "https://curl.haxx.se/"
-  url "https://curl.haxx.se/download/curl-8.0.1.tar.bz2"
-  mirror "http://mirror.sobukus.de/files/src/curl/curl-8.0.1.tar.bz2"
-  sha256 "9b6b1e96b748d04b968786b6bdf407aa5c75ab53a3d37c1c8c81cdb736555ccf"
+  url "https://curl.haxx.se/download/curl-8.1.0.tar.bz2"
+  mirror "http://mirror.sobukus.de/files/src/curl/curl-8.1.0.tar.bz2"
+  sha256 "8439f39f0f5dd41f399cf60f3f6f5c3e47a4a41c96f99d991b77cecb921c553b"
 
   bottle do
     cellar :any
@@ -25,6 +25,8 @@ class Curl < Formula
   deprecated_option "with-rtmp" => "with-rtmpdump"
   deprecated_option "with-ssh" => "with-libssh2"
   deprecated_option "with-ares" => "with-c-ares"
+
+  depends_on "zlib"
 
   # HTTP/2 support requires OpenSSL 1.0.2+ or LibreSSL 2.1.3+ for ALPN Support
   # which is currently not supported by Secure Transport (DarwinSSL).
@@ -58,6 +60,7 @@ class Curl < Formula
       --disable-dependency-tracking
       --disable-silent-rules
       --prefix=#{prefix}
+      --with-zlib=#{Formula["zlib"].opt_prefix}
     ]
 
     # cURL has a new firm desire to find ssl with PKG_CONFIG_PATH instead of using
