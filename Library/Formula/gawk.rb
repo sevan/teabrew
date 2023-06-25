@@ -1,22 +1,9 @@
 class Gawk < Formula
   desc "GNU awk utility"
   homepage "https://www.gnu.org/software/gawk/"
-  url "http://ftpmirror.gnu.org/gawk/gawk-4.1.3.tar.xz"
-  mirror "https://ftp.gnu.org/gnu/gawk/gawk-4.1.3.tar.xz"
-  sha256 "e3cf55e91e31ea2845f8338bedd91e40671fc30e4d82ea147d220e687abda625"
-  revision 1
-
-  bottle do
-    sha256 "ed2c5f0b20e4b4af151177a750b1287435aad66bb0c8c4b60daf753f3955332c" => :el_capitan
-    sha256 "c6fd269bedf83b9016fb8e09186de1c88ce18f51b1ad471f4b5ad4262066dda2" => :yosemite
-    sha256 "30486a1665295a3fee02e22465869cec9297aec262554a470bbc7f127d1766e5" => :mavericks
-    sha256 "d9edeb691699655ff990e2227abf67568916640eeffbbca959dbf3b2779c371e" => :mountain_lion
-  end
-
-  fails_with :llvm do
-    build 2326
-    cause "Undefined symbols when linking"
-  end
+  url "http://ftpmirror.gnu.org/gawk/gawk-5.2.2.tar.xz"
+  mirror "https://ftp.gnu.org/gnu/gawk/gawk-5.2.2.tar.xz"
+  sha256 "3c1fce1446b4cbee1cd273bd7ec64bc87d89f61537471cd3e05e33a965a250e9"
 
   def install
     system "./configure", "--disable-debug",
