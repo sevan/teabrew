@@ -4,10 +4,10 @@ class Python < Formula
   url "https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz"
   sha256 "b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43"
   head "https://github.com/python/cpython.git", :branch => "2.7"
+  revision 1
 
   bottle do
-    sha256 "8dc69c4e1f6f1ebaa59033ea30bf96f924d496ba0d0a7d698e5b9ed20369a657" => :tiger_g3
-    sha256 "5aa18fb91dc3b1b3bc810171b78b0a30b68de878457666addd9c08bd2873692d" => :tiger_altivec
+    sha256 "096bb14744a84346cf80d4fdf668cc3d1469ee28822562ba263f7cf198348258" => :tiger_g4
   end
 
   # Please don't add a wide/ucs4 option as it won't be accepted.

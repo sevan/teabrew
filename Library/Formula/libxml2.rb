@@ -12,13 +12,17 @@ class Libxml2 < Formula
     depends_on "libtool" => :build
   end
 
-  depends_on :python => :optional
+  bottle do
+    sha256 "a25624dea30d2c40b920ecaf6314801cd04350dbf2daa072211f7cf602dac040" => :tiger_altivec
+  end
+
+  depends_on "python" => :optional
+  depends_on "xz"
+  depends_on "zlib"
 
   keg_only :provided_by_osx
 
   option :universal
-
-  depends_on "xz" => :build
 
   def install
     ENV.universal_binary if build.universal?

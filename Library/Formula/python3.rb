@@ -4,6 +4,10 @@ class Python3 < Formula
   url "https://www.python.org/ftp/python/3.7.16/Python-3.7.16.tar.xz"
   sha256 "8338f0c2222d847e904c955369155dc1beeeed806e8d5ef04b00ef4787238bfd"
 
+  bottle do
+    sha256 "304579bb966493c655059c086b2765efbb152c314da29dda212c8bad1e566123" => :tiger_altivec
+  end
+
   option :universal
   option "with-tcl-tk", "Use Tigerbrew's Tk instead of OS X Tk (has optional Cocoa and threads support)"
 
@@ -229,7 +233,6 @@ class Python3 < Formula
 
     # Install unversioned symlinks in libexec/bin.
     {
-      "easy_install" => "easy_install-#{xy}",
       "pip" => "pip3",
       "wheel" => "wheel3",
     }.each do |unversioned_name, versioned_name|
@@ -237,7 +240,7 @@ class Python3 < Formula
     end
 
     # post_install happens after link
-    %W[pip3 pip#{xy} easy_install-#{xy} wheel3].each do |e|
+    %W[pip3 pip#{xy} wheel3].each do |e|
       (HOMEBREW_PREFIX/"bin").install_symlink bin/e
     end
 

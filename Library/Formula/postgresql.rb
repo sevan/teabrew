@@ -4,6 +4,10 @@ class Postgresql < Formula
   url "https://ftp.postgresql.org/pub/source/v15.3/postgresql-15.3.tar.bz2"
   sha256 "ffc7d4891f00ffbf5c3f4eab7fbbced8460b8c0ee63c5a5167133b9e6599d932"
 
+  bottle do
+    sha256 "cde4c8d705424b099a632733e1f4ecb2f7b8f354b5506b723aac40d062d33cac" => :tiger_altivec
+  end
+
   option "32-bit"
   option "without-perl", "Build without Perl support"
   option "without-tcl", "Build without Tcl support"
@@ -18,7 +22,7 @@ class Postgresql < Formula
   depends_on "readline"
   depends_on "libxml2"
   depends_on "libxslt"
-  depends_on "make" if MacOS.version < :leopard # GNU make 3.81 or newer is required
+  depends_on "make" => :build if MacOS.version < :leopard # GNU make 3.81 or newer is required
   depends_on "perl" if build.with? "perl"
   depends_on :python3 => :optional
   depends_on "zlib"
@@ -68,7 +72,7 @@ class Postgresql < Formula
     end
 
     system "./configure", *args
-    system "gmake", "install-world"
+    system make_path, "install-world"
   end
 
   def post_install
