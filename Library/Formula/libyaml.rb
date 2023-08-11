@@ -1,9 +1,9 @@
 class Libyaml < Formula
   desc "YAML Parser"
   homepage "http://pyyaml.org/wiki/LibYAML"
-  url "http://pyyaml.org/download/libyaml/yaml-0.2.5.tar.gz"
-  mirror "https://mirrors.edge.kernel.org/debian/pool/main/liby/libyaml/libyaml_0.2.5.orig.tar.gz"
-  sha256 "0c4e000253ef7187feeb940a01a1c7594f28d63aa16f978e892a0e2864f58614"
+  url "https://pyyaml.org/download/libyaml/yaml-0.2.5.tar.gz"
+  mirror "https://github.com/yaml/libyaml/releases/download/0.2.5/yaml-0.2.5.tar.gz"
+  sha256 "c642ae9b75fee120b2d96c712538bd2cf283228d2337df2cf2988e3c02678ef4"
 
   option :universal
 
