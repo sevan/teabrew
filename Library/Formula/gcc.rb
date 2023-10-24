@@ -21,14 +21,12 @@ class Gcc < Formula
 
   desc "GNU compiler collection"
   homepage "https://gcc.gnu.org"
-  url "https://ftp.gnu.org/gnu/gcc/gcc-7.3.0/gcc-7.3.0.tar.xz"
-  mirror "https://ftpmirror.gnu.org/gcc/gcc-7.3.0/gcc-7.3.0.tar.xz"
-  sha256 "832ca6ae04636adbb430e865a1451adf6979ab44ca1c8374f61fba65645ce15c"
+  url "https://ftp.gnu.org/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz"
+  mirror "https://ftpmirror.gnu.org/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz"
+  sha256 "b81946e7f01f90528a1f7352ab08cc602b9ccc05d4e44da4bd501c5a189ee661"
 
   bottle do
-    sha256 "dfe5debb5b2d22c65673a38bfc1902042d7094702f49ff3cdfa2ecb30d09308e" => :tiger_g3
-    sha256 "401a75fa8baebfd62260dfa5c1b2668a4599d2543e4634d3dc7c7bb3b120e9d4" => :tiger_altivec
-    sha256 "97ba51fa1021f7fecc5177d7dcff702f5c5bce654a2d851a320d1381fded52a0" => :leopard_g4e
+    sha256 "b97ce2a43d3d6797d37a09f640e6b42585dfca298e38f83e580e3d67ab08b47e" => :tiger_altivec
   end
 
   option "with-nls", "Build with native language support (localization)"
@@ -47,6 +45,8 @@ class Gcc < Formula
     depends_on "cctools" => :build
   end
 
+  # Bug 21514 - [DR 488] templates and anonymous enum - fixed in 4.0.2
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=21514
   fails_with :gcc_4_0
   fails_with :llvm
 
@@ -74,17 +74,14 @@ class Gcc < Formula
     sha256 "17afaf7daec1dd207cb8d06a7e026332637b11e83c3ad552b4cd32827f16c1d8"
   end
 
-  # This patch fixes the build on PPC
-  # https://gcc.gnu.org/ml/gcc-testresults/2017-01/msg02971.html
-  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=80865
-  patch do
-    url "https://gist.githubusercontent.com/mistydemeo/d35fcc040587cc75bd24d3464e93a45d/raw/c5fe1f0c6393526ff45803b0fc14e028149a245e/gcc_altivec.patch"
-    sha256 "09a795d013ec3e96107bfb9d5c6bba821cc867b88c3bce494ae1564bfd4ababd"
-  end
-
   def install
     # GCC will suffer build errors if forced to use a particular linker.
     ENV.delete "LD"
+    # GCC Bug 25127
+    # https://gcc.gnu.org/bugzilla//show_bug.cgi?id=25127
+    # ../../../libgcc/unwind.inc: In function '_Unwind_RaiseException':
+    # ../../../libgcc/unwind.inc:136:1: internal compiler error: in rs6000_emit_prologue, at config/rs6000/rs6000.c:26535
+    ENV.no_optimization if Hardware::CPU.type == :ppc
 
     # Otherwise libstdc++ will be incorrectly tagged with cpusubtype 10 (G4e)
     # https://github.com/mistydemeo/tigerbrew/issues/538

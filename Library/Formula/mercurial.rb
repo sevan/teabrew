@@ -3,18 +3,15 @@
 class Mercurial < Formula
   desc "Scalable distributed version control system"
   homepage "https://www.mercurial-scm.org/"
-  url "https://www.mercurial-scm.org/release/mercurial-6.4.3.tar.gz"
-  sha256 "a77fb62d325934a83a00b2fc6db109f44c67b86768fc40490366f513640c7f64"
+  url "https://www.mercurial-scm.org/release/mercurial-6.5.2.tar.gz"
+  sha256 "afc39d7067976593c8332b8e97a12afd393b55037c5fb9c3cab1a42c7560f60a"
 
   bottle do
-    cellar :any
-    sha256 "8e22f11ff1c147a368581a424c0ec1f1b11959440f881597e84fcc031743ade0" => :el_capitan
-    sha256 "c63ca0b939da4959f2623cac739876f3285683e92366f48a63371483254a6407" => :yosemite
-    sha256 "f1c4e9ebbb056b50a584b760569de5cacdafbd728dd821e00297380ee5095904" => :mavericks
-    sha256 "d39399222a31f040a5e22ef5853a9f99a476c1d76da85935710fdd80980d9ed5" => :mountain_lion
+    cellar :any_skip_relocation
+    sha256 "16695d8cf56854e015b1467585b1d3d3315ce2e67f8d5190f0fc7c9c8e155e61" => :tiger_altivec
   end
 
-  depends_on :python3 if MacOS.version < :snow_leopard
+  depends_on :python3
 
   def install
     ENV.minimal_optimization if MacOS.version <= :snow_leopard

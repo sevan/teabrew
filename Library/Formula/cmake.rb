@@ -6,15 +6,20 @@ class Cmake < Formula
 
   head "https://cmake.org/cmake.git"
 
+  bottle do
+    sha256 "7ed83fa411209917e876cd0a1396593ee78af1201e4ec952ab32884cf00e0c50" => :tiger_altivec
+  end
+
   option "without-docs", "Don't build man pages"
   option "with-completion", "Install Bash completion (Has potential problems with system bash)"
 
-  depends_on "curl" => :build
-  depends_on "libarchive" => :build
+  depends_on "curl"
+  depends_on "expat"
+  depends_on "libarchive"
   depends_on :python => :build if MacOS.version <= :snow_leopard && build.with?("docs")
-  depends_on "rhash" => :build
+  depends_on "rhash"
   depends_on "xz" => :build
-  depends_on "zlib" => :build
+  depends_on "zlib"
 
   # The `with-qt` GUI option was removed due to circular dependencies if
   # CMake is built with Qt support and Qt is built with MySQL support as MySQL uses CMake.

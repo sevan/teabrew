@@ -1,26 +1,25 @@
 class Openssl < Formula
   desc "SSL/TLS cryptography library"
   homepage "https://openssl.org/"
-  url "https://www.openssl.org/source/openssl-1.1.1v.tar.gz"
-  mirror "https://www.mirrorservice.org/sites/ftp.openssl.org/source/openssl-1.1.1v.tar.gz"
-  sha256 "d6697e2871e77238460402e9362d47d18382b15ef9f246aba6c7bd780d38a6b0"
+  url "https://www.openssl.org/source/openssl-1.1.1w.tar.gz"
+  mirror "https://www.mirrorservice.org/sites/ftp.openssl.org/source/openssl-1.1.1w.tar.gz"
+  sha256 "cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8"
 
   option :universal
   option "without-test", "Skip build-time tests (not recommended)"
 
-  # Need a minimum of Perl 5.10 for Configure script
-  depends_on "perl" => :build if MacOS.version < :snow_leopard
+  # Need a minimum of Perl 5.10 for Configure script and Test::More 0.96 for testsuite
+  depends_on "perl" => :build
   depends_on "makedepend" => :build
-  depends_on "curl-ca-bundle" if MacOS.version < :snow_leopard
+  depends_on "curl-ca-bundle"
 
   bottle do
-    sha256 "ef17c761f66cbd25e558f7593c2b09db5773282d01f90cd47fd34a8dc6beb9f6" => :tiger_g4
-    sha256 "f6c6f88d4be9b7af10b44d2ee51843661ebc9777cd39f296e54db6d43e7ac969" => :tiger_g5
+    sha256 "7fa8eeb679ec9e180c5296515c1402207c653b6fd22be981b1c67e81f3fc0c4b" => :tiger_altivec
   end
 
   def arch_args
     {
-      :x86_64 => %w[darwin64-x86_64-cc enable-ec_nistp_64_gcc_128],
+      :x86_64 => %w[darwin64-x86_64-cc],
       :i386   => %w[darwin-i386-cc],
       :ppc    => %w[darwin-ppc-cc],
       :ppc64  => %w[darwin64-ppc-cc]

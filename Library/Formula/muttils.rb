@@ -3,6 +3,7 @@ class Muttils < Formula
   homepage "https://hg.phloxic.productions/muttils"
   url "https://hg.phloxic.productions/muttils/archive/07e310d44b55.tar.bz2"
   sha256 "f3392a027b0def2c37478de9d3e8e8e4fe087004f690e84d536aa39dd4b9cc80"
+  version "1.4"
 
   depends_on :python if MacOS.version <= :snow_leopard
 

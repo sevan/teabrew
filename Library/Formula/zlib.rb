@@ -1,14 +1,12 @@
 class Zlib < Formula
   desc "General-purpose lossless data-compression library"
   homepage "http://www.zlib.net/"
-  url "http://zlib.net/zlib-1.2.13.tar.gz"
-  sha256 "b3a24de97a8fdbc835b9833169501030b8977031bcb54b3b3ac13740f846ab30"
+  url "https://zlib.net/fossils/zlib-1.3.tar.gz"
+  sha256 "ff0ba4c292013dbc27530b3a81e1f9a813cd39de01ca5e0f8bf355702efa593e"
 
   bottle do
     cellar :any
-    sha256 "1df174f616cf57e45253bd97fdca4ec850633fd99135f617fae648290cd1bb8d" => :tiger_g4
-    sha256 "fa7db0585632ca457ac920ca49facc23aafbe36668dac4b073b51e926bcfd53a" => :tiger_g4e
-    sha256 "66150f97576a183f6c1fd2edf37be055fa8a71b47c6286369a0ad0c6b64a1056" => :tiger_g5
+    sha256 "e04b821b59723ea658c6c66a00bde585ec4a5b917fbcfdd2f851e51a9e4ee9ba" => :tiger_altivec
   end
 
   keg_only :provided_by_osx

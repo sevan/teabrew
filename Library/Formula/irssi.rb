@@ -12,6 +12,16 @@ class Irssi < Formula
     depends_on "lynx" => :build
   end
 
+  bottle do
+    sha256 "83c8e6d383114da61ac1aedad66ae58e380721e0b35e2c1cce812c009ff4577f" => :tiger_altivec
+  end
+
+  # Fix crash on exit with Tiger.
+  # realpath(3) changed in POSIX.1-2008 however the signature is
+  # the same so we can use it without guarding to OS version.
+  # https://github.com/irssi/irssi/issues/1482
+  patch :p0, :DATA
+
   option "with-dante", "Build with SOCKS support"
   option "without-perl", "Build without perl support"
 
@@ -20,7 +30,7 @@ class Irssi < Formula
   depends_on "openssl"
   depends_on "dante" => :optional
   depends_on "ncurses"
-  depends_on "perl" => :build if build.with? "perl"
+  depends_on "perl" if build.with? "perl"
 
   if build.with? "perl"
     # Bug building with Perl 5.37 & newer

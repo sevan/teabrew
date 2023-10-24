@@ -5,12 +5,22 @@ class Poke < Formula
   sha256 "758e551dd53a6cce54ec94d8fc21fa4d6b52a27d1c2667206d599ecdc74f0d97"
   license "GPL-3.0-or-later"
 
+  bottle do
+    sha256 "c864aa631e8861088c4f65951338eeaaf04503422bf37a261bfa11917afa6b6f" => :tiger_altivec
+  end
+
   depends_on "pkg-config" => :build
   depends_on "bdw-gc"
   depends_on "gettext"
   depends_on "libiconv"
   depends_on "ncurses"
   depends_on "readline"
+
+  # ../../libpoke/pvm.jitter:6829: error: #pragma GCC diagnostic not allowed inside functions
+  fails_with :gcc do
+    build 5553
+    cause "One test failure on G4"
+  end
 
   def install
     args = %W[

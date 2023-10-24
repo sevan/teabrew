@@ -8,11 +8,10 @@ class Ld64 < Formula
   #
   url "https://github.com/apple-oss-distributions/ld64/archive/refs/tags/ld64-97.17.tar.gz"
   sha256 "dc609d295365f8f5853b45e8dbcb44ca85e7dbc7a530e6fb5342f81d3c042db5"
+  revision 1
 
   bottle do
-    sha1 "5a42d849b7231d0b5985514ed5e77aa424048853" => :tiger_altivec
-    sha1 "9c32cb4c189dd8c05f5fed54eb05cf7b2220653d" => :leopard_g3
-    sha1 "28728a210881f5b6949c3305e932eed9109b3a10" => :leopard_altivec
+    sha256 "bb9853e7c2428a48282eb917ac0b05672b1a00350cc2c6585a05c8d7d567bfcb" => :tiger_altivec
   end
 
   resource "makefile" do
@@ -27,6 +26,8 @@ class Ld64 < Formula
   depends_on "cctools-headers" => :build
   depends_on "dyld-headers" => :build
   depends_on "libunwind-headers" => :build
+  # No CommonCrypto
+  depends_on "openssl" if MacOS.version < :leopard
 
   keg_only :provided_by_osx,
     "ld64 is an updated version of the ld shipped by Apple."

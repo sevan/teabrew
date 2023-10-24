@@ -11,7 +11,17 @@ class Libffi < Formula
     depends_on "libtool" => :build
   end
 
+  bottle do
+    sha256 "f73c477afbca66cf30dd489efa3177fa89ace748e11bd1fd1b6395eeb18a969e" => :tiger_altivec
+  end
+
   keg_only :provided_by_osx, "Some formulae require a newer version of libffi." if MacOS.version > :tiger
+
+  # i386 build fix
+  patch do
+    url "https://github.com/libffi/libffi/commit/e70dd1aa240159bd2050cb1eafffb49cdc1d8b22.diff"
+    sha256 "f8716ba642b979756958cdae1cd6a673449fafca7cb695c12cd85a47ab3e4eaf"
+  end
 
   def install
     ENV.deparallelize # https://github.com/Homebrew/homebrew/pull/19267

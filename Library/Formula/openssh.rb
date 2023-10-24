@@ -1,15 +1,14 @@
 class Openssh < Formula
   desc "OpenBSD freely-licensed SSH connectivity tools"
   homepage "https://www.openssh.com/"
-  url "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.4p1.tar.gz"
-  mirror "https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.4p1.tar.gz"
-  version "9.4p1"
-  sha256 "3608fd9088db2163ceb3e600c85ab79d0de3d221e59192ea1923e23263866a85"
+  url "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.5p1.tar.gz"
+  mirror "https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.5p1.tar.gz"
+  version "9.5p1"
+  sha256 "f026e7b79ba7fb540f75182af96dc8a8f1db395f922bbc9f6ca603672686086b"
   license "SSH-OpenSSH"
 
   bottle do
-    sha256 "a25a0b79a12e3d6e1e25bcad479f5ee3adb6b39474ee11d5f610d0324a2defff" => :tiger_altivec
-    sha256 "c73f15b75458d5aff0c475dd43941e35fc959f026676eae139e8653ad7eab5b5" => :tiger_g5
+    sha256 "17cce12458f27b4db3dd5bd4b574764cf213dd6520582919e8e5c79a775d8c27" => :tiger_altivec
   end
 
   # Please don't resubmit the keychain patch option. It will never be accepted.
@@ -19,10 +18,6 @@ class Openssh < Formula
   depends_on "ldns"
   depends_on "openssl"
   depends_on "zlib"
-
-  #uses_from_macos "lsof" => :test
-  #uses_from_macos "krb5"
-  #uses_from_macos "libedit"
 
     # Both these patches are applied by Apple.
     # https://github.com/apple-oss-distributions/OpenSSH/blob/main/openssh/sandbox-darwin.c#L66
@@ -54,13 +49,11 @@ class Openssh < Formula
       --with-zlib=#{Formula["zlib"].opt_prefix}
     ]
 
-    if OS.mac?
-      ENV.append "CPPFLAGS", "-D__APPLE_SANDBOX_NAMED_EXTERNAL__"
+    ENV.append "CPPFLAGS", "-D__APPLE_SANDBOX_NAMED_EXTERNAL__"
 
-      # Ensure sandbox profile prefix is correct.
-      # We introduce this issue with patching, it's not an upstream bug.
-      inreplace "sandbox-darwin.c", "@PREFIX@/share/openssh", etc/"ssh"
-    end
+    # Ensure sandbox profile prefix is correct.
+    # We introduce this issue with patching, it's not an upstream bug.
+    inreplace "sandbox-darwin.c", "@PREFIX@/share/openssh", etc/"ssh"
 
     system "./configure", *args
     system "make"
