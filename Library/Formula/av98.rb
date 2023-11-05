@@ -2,6 +2,7 @@ class Av98 < Formula
   desc "AV-98 is an experimental client for the Gemini protocol"
   homepage "https://tildegit.org/solderpunk/AV-98"
   url "https://tildegit.org/solderpunk/AV-98/archive/v1.0.1.tar.gz"
+  mirror "https://geeklan.co.uk/files/gemini/av98-1.0.1.tar.gz"
   sha256 "8133c4c1295d4f0d6ef11c7a285b13a73d9e4bb9f29cfdba6bfe877e12cc801b"
 
   depends_on "python3"

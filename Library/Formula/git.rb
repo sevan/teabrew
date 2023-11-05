@@ -7,6 +7,7 @@ class Git < Formula
   revision 1
 
   bottle do
+    sha256 "7442d605398815cab539b68c140e496a456036530f81e5be5de7f08121a703d1" => :tiger_altivec
   end
 
   resource "html" do
@@ -212,7 +213,7 @@ __END__
  		OLD_ICONV = UnfortunatelyYes
  		NO_APPLE_COMMON_CRYPTO = YesPlease
  	endif
-+	ifeq ($(shell expr "$(uname_R)" : '[156789]\.'),2)
++	ifeq ($(shell test "`expr "$(uname_R)" : '\([0-9][0-9]*\)\.'`" -lt 11 && echo 1),1)
 +		NO_REGEX=YesPlease
 +	else
 +		USE_ENHANCED_BASIC_REGULAR_EXPRESSIONS = YesPlease

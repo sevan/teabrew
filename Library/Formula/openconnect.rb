@@ -3,9 +3,10 @@ class Openconnect < Formula
   homepage "http://www.infradead.org/openconnect.html"
   url "https://www.infradead.org/openconnect/download/openconnect-9.12.tar.gz"
   sha256 "a2bedce3aa4dfe75e36e407e48e8e8bc91d46def5335ac9564fbf91bd4b2413e"
+  revision 1
 
   bottle do
-    sha256 "ac170fd498f2f668253bdc60080039795491eb5b81cd120f39f40cdbf465ac27" => :tiger_altivec
+    sha256 "4c379a66a6367ab6219a6a86bf4b429266af1c53ebfed5a1cc601fe3ff521878" => :tiger_altivec
   end
 
   head do
@@ -17,7 +18,7 @@ class Openconnect < Formula
 
   depends_on "pkg-config" => :build
   depends_on "gettext"
-  depends_on "openssl"
+  depends_on "openssl3"
   depends_on "oath-toolkit" => :optional
   depends_on "p11-kit"
   depends_on "stoken" => :optional
@@ -43,6 +44,7 @@ class Openconnect < Formula
       --sbindir=#{bin}
       --localstatedir=#{var}
       --with-vpnc-script=#{etc}/vpnc-script
+      --without-gnutls
     ]
 
     system "./configure", *args
