@@ -7,19 +7,12 @@ class Mpfr < Formula
 
   bottle do
     cellar :any
+    sha256 "2be468ac995cbad3fa75c17a7fc41b2967c52591434124de10420b823fc95aa6" => :tiger_altivec
   end
 
   option "32-bit"
 
   depends_on "gmp"
-
-  fails_with :clang do
-    build 421
-    cause <<-EOS.undent
-      clang build 421 segfaults while building in superenv;
-      see https://github.com/Homebrew/homebrew/issues/15061
-      EOS
-  end
 
   def install
     ENV.m32 if build.build_32_bit?
