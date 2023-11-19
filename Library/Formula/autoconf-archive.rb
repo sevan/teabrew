@@ -1,15 +1,12 @@
 class AutoconfArchive < Formula
   desc "Collection of over 500 reusable autoconf macros"
   homepage "https://savannah.gnu.org/projects/autoconf-archive/"
-  url "http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-2015.02.24.tar.xz"
-  mirror "https://ftp.gnu.org/gnu/autoconf-archive/autoconf-archive-2015.02.24.tar.xz"
-  sha256 "69715bdd078f552ca85e498a94543e11cb8bcdf0359e659b84d84d19372b0dc5"
+  url "http://ftpmirror.gnu.org/autoconf-archive/autoconf-archive-2023.02.20.tar.xz"
+  mirror "https://ftp.gnu.org/gnu/autoconf-archive/autoconf-archive-2023.02.20.tar.xz"
+  sha256 "71d4048479ae28f1f5794619c3d72df9c01df49b1c628ef85fde37596dc31a33"
 
   bottle do
     cellar :any_skip_relocation
-    revision 1
-    sha256 "e624e553fc32244c54188a9e397d03265478482f28942eb8b3af0d3c78810046" => :yosemite
-    sha256 "661fc895512c91c0b2afd4c906b9c96f8f471b4b10884be893342f396183a8db" => :mavericks
   end
 
   # autoconf-archive is useless without autoconf
