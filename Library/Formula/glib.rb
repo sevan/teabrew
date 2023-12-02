@@ -5,9 +5,16 @@ class Glib < Formula
   sha256 "664a5dee7307384bb074955f8e5891c7cecece349bbcc8a8311890dc185b428e"
 
   bottle do
+    sha256 "cd2cc4166c82571ca781566650e1600d351669f060ab9782c6c1107be368e65c" => :tiger_altivec
   end
 
-  option :universal
+  # Fixes g_get_monotonic_time on non-Intel Macs; submitted upstream:
+  # https://bugzilla.gnome.org/show_bug.cgi?id=728123
+  # https://bugzilla.gnome.org/show_bug.cgi?id=673135 Resolved as wontfix,
+  # but needed to fix an assumption about the location of the d-bus machine
+  # id file.
+  patch :p0, :DATA
+
   option "with-test", "Build a debug build and run tests. NOTE: Not all tests succeed yet"
   option "with-static", "Build glib with a static archive."
 
@@ -15,6 +22,7 @@ class Glib < Formula
 
   depends_on "pkg-config" => :build
   depends_on "gettext"
+  depends_on "libiconv"
   depends_on "libffi"
   depends_on "pcre"
   depends_on "python3"
@@ -25,34 +33,9 @@ class Glib < Formula
   depends_on "autoconf" => :build
   depends_on "libtool" => :build
 
-  #resource "config.h.ed" do
-  #  url "https://raw.githubusercontent.com/Homebrew/formula-patches/eb51d82/glib/config.h.ed"
-  #  version "111532"
-  #  sha256 "9f1e23a084bc879880e589893c17f01a2f561e20835d6a6f08fcc1dad62388f1"
-  #end
-
-  # Fixes compilation with FSF GCC. Doesn't fix it on every platform, due
-  # to unrelated issues in GCC, but improves the situation.
-  # Patch submitted upstream: https://bugzilla.gnome.org/show_bug.cgi?id=672777
-  #patch do
-  #  url "https://raw.githubusercontent.com/Homebrew/formula-patches/a39dec26/glib/gio.patch"
-  #  sha256 "284cbf626f814c21f30167699e6e59dcc0d31000d71151f25862b997a8c8493d"
-  #end
-
-  #patch do
-  #    url "https://raw.githubusercontent.com/Homebrew/formula-patches/fe50d25d/glib/universal.diff"
-  #    sha256 "e21f902907cca543023c930101afe1d0c1a7ad351daa0678ba855341f3fd1b57"
-  #end if build.universal?
-
   def install
-    ENV.universal_binary if build.universal?
-
-    #inreplace %w[gio/gdbusprivate.c gio/xdgmime/xdgmime.c glib/gutils.c],
-    #  "@@HOMEBREW_PREFIX@@", HOMEBREW_PREFIX
-
-    # renaming is necessary for patches to work
-    #mv "gio/gcocoanotificationbackend.c", "gio/gcocoanotificationbackend.m" unless MacOS.version < :mavericks
-    #mv "gio/gnextstepsettingsbackend.c", "gio/gnextstepsettingsbackend.m"
+    inreplace %w[gio/gdbusprivate.c gio/xdgmime/xdgmime.c glib/gutils.c],
+      "HOMEBREWPREFIX", HOMEBREW_PREFIX
 
     # Disable dtrace; see https://trac.macports.org/ticket/30413
     args = %W[
@@ -68,15 +51,11 @@ class Glib < Formula
 
     args << "--enable-static" if build.with? "static"
 
-    system "./autogen.sh"
+    # autogen.sh defaults to running configure itself, without any args
+    system "env NOCONFIGURE=1 ./autogen.sh"
     system "./configure", *args
 
-    if build.universal?
-      buildpath.install resource("config.h.ed")
-      system "ed -s - config.h <config.h.ed"
-    end
-
-    # disable creating directory for GIO_MOUDLE_DIR, we will do this manually in post_install
+    # disable creating directory for GIO_MODULE_DIR, we will do this manually in post_install
     inreplace "gio/Makefile", "$(mkinstalldirs) $(DESTDIR)$(GIO_MODULE_DIR)", ""
 
     system "make"
@@ -86,15 +65,14 @@ class Glib < Formula
 
     # `pkg-config --libs glib-2.0` includes -lintl, and gettext itself does not
     # have a pkgconfig file, so we add gettext lib and include paths here.
-    #gettext = Formula["gettext"].opt_prefix
-    #inreplace lib+"pkgconfig/glib-2.0.pc" do |s|
-    #  s.gsub! "Libs: -L${libdir} -lglib-2.0 -lintl",
-    #          "Libs: -L${libdir} -lglib-2.0 -L#{gettext}/lib -lintl"
-    #  s.gsub! "Cflags: -I${includedir}/glib-2.0 -I${libdir}/glib-2.0/include",
-    #          "Cflags: -I${includedir}/glib-2.0 -I${libdir}/glib-2.0/include -I#{gettext}/include"
-    #end
+    gettext = Formula["gettext"].opt_prefix
+    inreplace lib+"pkgconfig/glib-2.0.pc" do |s|
+      s.gsub! "Libs: -L${libdir} -lglib-2.0 -lintl",
+              "Libs: -L${libdir} -lglib-2.0 -L#{gettext}/lib -lintl"
+      s.gsub! "Cflags: -I${includedir}/glib-2.0 -I${libdir}/glib-2.0/include",
+              "Cflags: -I${includedir}/glib-2.0 -I${libdir}/glib-2.0/include -I#{gettext}/include"
+    end
 
-    #(share+"gtk-doc").rmtree
   end
 
   def post_install
@@ -122,7 +100,6 @@ class Glib < Formula
     system "./test"
   end
 
-  patch :p0, :DATA
 end
 __END__
 --- gio/gosxcontenttype.m.orig	2023-05-24 18:28:06.000000000 +0100
@@ -205,14 +182,14 @@ __END__
  }
  #else
  gint64
---- gio/gdbusprivate.c.orig	2023-05-24 23:47:33.000000000 +0100
-+++ gio/gdbusprivate.c	2023-05-24 23:49:08.000000000 +0100
+--- gio/gdbusprivate.c.orig	2018-12-23 13:10:41.000000000 +0000
++++ gio/gdbusprivate.c	2023-11-26 21:19:10.000000000 +0000
 @@ -2098,7 +2098,7 @@
    /* TODO: use PACKAGE_LOCALSTATEDIR ? */
    ret = NULL;
    first_error = NULL;
 -  if (!g_file_get_contents ("/var/lib/dbus/machine-id",
-+  if (!g_file_get_contents ("@@HOMEBREW_PREFIX@@/var/lib/dbus/machine-id",
++  if (!g_file_get_contents ("HOMEBREWPREFIX/var/lib/dbus/machine-id",
                              &ret,
                              NULL,
                              &first_error) &&
@@ -221,29 +198,29 @@ __END__
      {
        g_propagate_prefixed_error (error, first_error,
 -                                  _("Unable to load /var/lib/dbus/machine-id or /etc/machine-id: "));
-+                                  _("Unable to load @@HOMEBREW_PREFIX@@ or /etc/machine-id: "));
++                                  _("Unable to load HOMEBREWPREFIX or /etc/machine-id: "));
      }
    else
      {
---- gio/xdgmime/xdgmime.c.orig	2023-05-25 13:18:39.000000000 +0100
-+++ gio/xdgmime/xdgmime.c	2023-05-25 13:19:24.000000000 +0100
+--- gio/xdgmime/xdgmime.c.orig	2018-12-23 13:10:41.000000000 +0000
++++ gio/xdgmime/xdgmime.c	2023-11-26 21:19:10.000000000 +0000
 @@ -235,7 +235,7 @@
    xdg_data_dirs = getenv ("XDG_DATA_DIRS");
  
    if (xdg_data_dirs == NULL)
 -    xdg_data_dirs = "/usr/local/share/:/usr/share/";
-+    xdg_data_dirs = "@@HOMEBREW_PREFIX@@/share/:/usr/share/";
++    xdg_data_dirs = "HOMEBREWPREFIX/share/:/usr/share/";
  
    /* Work out how many dirs we’re dealing with. */
    if (xdg_data_home != NULL || home != NULL)
---- glib/gutils.c.orig	2023-05-25 13:21:11.000000000 +0100
-+++ glib/gutils.c	2023-05-25 13:22:17.000000000 +0100
+--- glib/gutils.c.orig	2018-12-23 13:10:41.000000000 +0000
++++ glib/gutils.c	2023-11-26 21:19:10.000000000 +0000
 @@ -2125,7 +2125,7 @@
     */
  #ifndef G_OS_WIN32
    if (!data_dirs || !data_dirs[0])
 -    data_dirs = "/usr/local/share/:/usr/share/";
-+    data_dirs = "@@HOMEBREW_PREFIX@@/share/:/usr/share/";
++    data_dirs = "HOMEBREWPREFIX/share/:/usr/share/";
  
    data_dir_vector = g_strsplit (data_dirs, G_SEARCHPATH_SEPARATOR_S, 0);
  #else

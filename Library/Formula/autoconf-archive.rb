@@ -7,6 +7,7 @@ class AutoconfArchive < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "85eb453571547a14341cf7d53cfe8361db15969e974c9ad5cc2f14c1c2447cbc" => :tiger_altivec
   end
 
   # autoconf-archive is useless without autoconf
@@ -22,17 +23,12 @@ class AutoconfArchive < Formula
       AC_INIT(myconfig, version-0.1)
       AC_MSG_NOTICE([Hello, world.])
 
-      m4_include([#{share}/aclocal/ax_have_select.m4])
+      AC_CONFIG_MACRO_DIR([#{share}/aclocal])
 
-      # from http://www.gnu.org/software/autoconf-archive/ax_have_select.html
-      AX_HAVE_SELECT(
-        [AX_CONFIG_FEATURE_ENABLE(select)],
-        [AX_CONFIG_FEATURE_DISABLE(select)])
-      AX_CONFIG_FEATURE(
-        [select], [This platform supports select(7)],
-        [HAVE_SELECT], [This platform supports select(7).])
+      # https://www.gnu.org/software/autoconf-archive/ax_prog_cc_for_build.html
+      AX_PROG_CC_FOR_BUILD
     EOS
 
-    system "#{Formula["autoconf"].bin}/autoconf", "test.m4"
+    system "#{Formula["autoconf"].bin}/autoconf", "-o", testpath/"test", "test.m4"
   end
 end

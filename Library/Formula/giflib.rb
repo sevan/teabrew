@@ -5,7 +5,7 @@ class Giflib < Formula
   sha256 "31da5562f44c5f15d63340a09a4fd62b48c45620cd302f77a6d9acf0077879bd"
 
   bottle do
-    cellar :any
+    sha256 "924f16d9323e1380718228addc1dd09ce6091ed9a379951710c90af1813efba0" => :tiger_altivec
   end
 
   option :universal
@@ -19,7 +19,9 @@ class Giflib < Formula
     ENV.universal_binary if build.universal?
     ENV.enable_warnings if ENV.compiler == :gcc_4_0
 
-    system "make", "all"
+    # Pass CFLAGS to explicitly override the CFLAGS from the makefile,
+    # which contains some flags that are incompatible with GCC 4.0/4.2
+    system "make", "all", "CFLAGS=#{ENV.cflags}"
     system "make", "install", "PREFIX=#{prefix}"
   end
 
