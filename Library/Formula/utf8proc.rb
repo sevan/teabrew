@@ -6,6 +6,8 @@ class Utf8proc < Formula
   license all_of: ["MIT", "Unicode-DFS-2015"]
 
   bottle do
+    cellar :any
+    sha256 "259035346607c349dac583c42df226ee6d3d84f32b9bfdbc564d304c3ccc7d3c" => :tiger_altivec
   end
 
   # Unbreak build on legacy compilers which lack warnings for sign conversion & linking
@@ -46,7 +48,7 @@ __END__
  
  libutf8proc.$(MAJOR).dylib: utf8proc.o
 -	$(CC) $(LDFLAGS) -dynamiclib -o $@ $^ -install_name $(libdir)/$@ -Wl,-compatibility_version -Wl,$(MAJOR) -Wl,-current_version -Wl,$(MAJOR).$(MINOR).$(PATCH)
-+	$(CC) $(LDFLAGS) -dynamic -o $@ $^ -install_name $(libdir)/$@ -Wl,-compatibility_version -Wl,$(MAJOR) -Wl,-current_version -Wl,$(MAJOR).$(MINOR).$(PATCH) -dynamiclib
++	$(CC) $(LDFLAGS) -dynamiclib -o $@ $^ -install_name $(libdir)/$@ -compatibility_version $(MAJOR) -current_version $(MAJOR).$(MINOR).$(PATCH)
  
  libutf8proc.dylib: libutf8proc.$(MAJOR).dylib
  	ln -f -s libutf8proc.$(MAJOR).dylib $@

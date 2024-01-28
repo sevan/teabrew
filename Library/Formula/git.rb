@@ -212,7 +212,7 @@ __END__
  		OLD_ICONV = UnfortunatelyYes
  		NO_APPLE_COMMON_CRYPTO = YesPlease
  	endif
-+	ifeq ($(shell test "`expr "$(uname_R)" : '\([0-9][0-9]*\)\.'`" -lt 11 && echo 1),1)
++	ifeq ($(shell test "`expr "$(uname_R)" : '\([0-9][0-9]*\)\.'`" -lt 12 && echo 1),1)
 +		NO_REGEX=YesPlease
 +	else
 +		USE_ENHANCED_BASIC_REGULAR_EXPRESSIONS = YesPlease
@@ -234,7 +234,7 @@ __END__
  		endif
  	endif
  
-+	ifneq ($(shell expr "$(uname_R)" : '[156789]\.'),2)
++	ifeq ($(shell test "`expr "$(uname_R)" : '\([0-9][0-9]*\)\.'`" -gt 13 && echo 1), 1)
  	# The builtin FSMonitor on MacOS builds upon Simple-IPC.  Both require
  	# Unix domain sockets and PThreads.
  	ifndef NO_PTHREADS
