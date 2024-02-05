@@ -5,6 +5,7 @@ class Python3 < Formula
   sha256 "7911051ed0422fd54b8f59ffc030f7cf2ae30e0f61bda191800bb040dce4f9d2"
 
   bottle do
+    sha256 "f7cd90b25ee8a2a977a2063211ec49fb56e22150fc009fffd2ff6b962e7b7aee" => :tiger_altivec
   end
 
   option :universal
@@ -13,7 +14,6 @@ class Python3 < Formula
   deprecated_option "with-brewed-tk" => "with-tcl-tk"
 
   depends_on "pkg-config" => :build
-  depends_on "sphinx-doc" => :build if MacOS.version > :snow_leopard
   depends_on "readline" => :recommended
   depends_on "sqlite"
   depends_on "gdbm" => :recommended
@@ -170,13 +170,6 @@ class Python3 < Formula
       (libexec/r).install resource(r)
     end
 
-    if MacOS.version > :snow_leopard
-      cd "Doc" do
-        system "make", "html"
-        doc.install Dir["build/html/*"]
-      end
-    end
-
     # Install unversioned symlinks in libexec/bin.
     {
       "idle" => "idle3",
@@ -186,6 +179,11 @@ class Python3 < Formula
     }.each do |unversioned_name, versioned_name|
       (libexec/"bin").install_symlink (bin/versioned_name).realpath => unversioned_name
     end
+
+    # Installed test data contains prebuilt libraries for 10.9+,
+    # which confuses ld in earlier versions of OS X and breaks
+    # relocation/bottling attempts.
+    (libexec/"wheel/tests/testdata").rmtree
   end
 
   def post_install
